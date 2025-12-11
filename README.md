@@ -1,141 +1,139 @@
-# Crowd-Detection-using-WIDERFACE
-Crowd Face Detection Using Classical and Deep Learning Approaches
+# Crowd Face Detection Using Classical and Deep Learning Approaches
 
-This repository contains the implementation and benchmarking code for crowd face detection using four classical and deep-learning models. Evaluations are conducted on the WIDER FACE dataset to compare performance under challenging conditions such as occlusion, tiny faces, pose variation, and illumination differences.
+This repository contains the implementation and benchmarking of multiple face-detection models on the challenging **WIDER FACE** dataset. The project compares classical and modern deep-learning models under heavy occlusion, tiny faces, illumination changes, and crowd density.
 
-📌 Overview
+---
 
-Face detection in crowded environments is a difficult computer-vision task. This project evaluates:
+## 📌 Overview
 
-Viola–Jones (classical Haar-cascade)
+This study evaluates four face-detection models:
 
-RetinaFace (anchor-based deep detector)
+- **Viola–Jones** (Haar Cascade)
+- **RetinaFace** (anchor-based)
+- **Faster R-CNN** (two-stage detector)
+- **YOLOv8n-Face** (anchor-free, lightweight)
 
-Faster R-CNN (two-stage region proposal network)
+Models are tested using precision, recall, F1-score, and IoU.
 
-YOLOv8n-Face (modern anchor-free YOLO detector)
+---
 
-All models are tested for precision, recall, F1-score, and IoU. Due to compute constraints, lightweight variants were used where applicable.
+## 📂 Dataset: WIDER FACE
 
-📂 Dataset: WIDER FACE
+The benchmark dataset used:
 
-The dataset used is the WIDER FACE benchmark, containing:
+- **32,203 images**
+- **393,703 annotated faces**
+- High variation in scale, pose, illumination, and crowd density
 
-32,203 images
+**Split:**
+- 50% Training  
+- 10% Validation  
+- 40% Testing  
 
-393,703 annotated faces
+Minimal augmentation was used due to GPU memory constraints.
 
-Variations in scale, illumination, pose, crowd density
+---
 
-Dataset split:
+## 🧠 Models Evaluated
 
-50% Training
+### 1. Viola–Jones (Haar Cascade)
+- Fast and lightweight  
+- Works for frontal faces  
+- Poor performance on small, rotated, or occluded faces  
 
-10% Validation
+### 2. RetinaFace
+- Anchor-based single-stage detector  
+- Predicts bounding boxes + facial keypoints  
+- Extremely low recall due to VRAM limitations during training  
 
-40% Testing
+### 3. Faster R-CNN
+- Two-stage detector: RPN + classifier  
+- Good stability and box quality  
+- Slow inference and struggles with tiny faces  
 
-Bounding boxes were visualized to verify label correctness. Augmentation was minimal due to GPU limitations.
+### 4. YOLOv8n-Face
+- Anchor-free, lightweight YOLO model  
+- Great performance on tiny and occluded faces  
+- Fastest inference and highest recall in our tests  
 
-🧠 Models Evaluated
-1. Viola–Jones (Haar Cascade)
+---
 
-Fast and lightweight
+## 📏 Evaluation Metrics
 
-Works mainly for frontal, non-occluded faces
+- **Precision**
+- **Recall**
+- **F1-score**
+- **Intersection-over-Union (IoU)**
 
-Very poor performance on tiny and rotated faces
+---
 
-2. RetinaFace
+## 📊 Quantitative Results
 
-Anchor-based single-stage model
+| Model          | Precision | Recall  | F1 Score | Mean IoU |
+|----------------|-----------|---------|----------|----------|
+| Viola–Jones    | 0.7293    | 0.1187  | 0.2041   | 0.6436   |
+| RetinaFace     | 0.2332    | 0.0182  | 0.0389   | 0.6655   |
+| Faster R-CNN   | 0.5942    | 0.3156  | 0.4122   | 0.7300   |
+| YOLOv8n-Face   | 0.9833    | 0.2985  | 0.4580   | 0.8400   |
 
-Predicts face boxes + 5 keypoints
+**YOLOv8n-Face demonstrates the best overall performance.**
 
-GPU VRAM constraints limited training
+---
 
-Low recall observed
+## 🖼️ Qualitative Analysis
 
-3. Faster R-CNN
+- **Viola–Jones**: fails to detect tiny/occluded faces  
+- **RetinaFace**: accurate bounding boxes but very low recall  
+- **Faster R-CNN**: reliable but slow and weak for tiny faces  
+- **YOLOv8n-Face**: strong generalization across very crowded scenes  
 
-Two-stage detector with RPN
+---
 
-Reliable box quality
+## 🧩 Discussion
 
-Computationally heavy
+YOLOv8n-Face leads due to:
 
-Struggles with tiny faces
+- Anchor-free design  
+- Efficient feature pyramids  
+- Real-time capabilities  
+- Strong performance on small and occluded faces  
 
-4. YOLOv8n-Face
+Classical detectors are insufficient for modern crowd-level detection tasks.
 
-Anchor-free, lightweight, fast
+---
 
-Strong performance on tiny + occluded faces
+## ⚠️ Limitations
 
-Best recall and highest IoU
+- Limited GPU memory restricted batch sizes  
+- Heavy models (RetinaFace, Faster R-CNN) couldn't be fully trained  
+- WIDER FACE "hard" subset remains tough  
+- mAP metrics not computed due to resource constraints  
 
-Best overall model in this study
+---
 
-📏 Evaluation Metrics
+## 🚀 Future Work
 
-Precision
+- Train larger models (YOLOv8m, YOLOv8l)  
+- Use better augmentation (mosaic, motion blur, jitter)  
+- Compute mAP@0.5 and mAP@0.5:0.95  
+- Build a real-time deployment pipeline  
 
-Recall
+---
 
-F1-Score
+## 🏁 Conclusion
 
-Mean IoU
+YOLOv8n-Face achieves the best balance between accuracy and speed, making it ideal for real-world crowd face detection. Classical models remain viable only for simple, constrained scenarios, whereas modern lightweight deep-learning models excel in complex, high-density environments.
 
-📊 Quantitative Results
-Model	Precision	Recall	F1 Score	Mean IoU
-Viola–Jones	0.7293	0.1187	0.2041	0.6436
-RetinaFace	0.2332	0.0182	0.0389	0.6655
-Faster R-CNN	0.5942	0.3156	0.4122	0.7300
-YOLOv8n-Face	0.9833	0.2985	0.4580	0.8400
+---
 
-YOLOv8n-Face achieves the strongest overall performance.
+## 📚 References
 
-🖼️ Qualitative Findings
+- WIDER FACE Dataset  
+- Viola & Jones (2001) — Haar Cascade  
+- Deng et al. (2020) — RetinaFace  
+- Ren et al. (2015) — Faster R-CNN  
+- Ultralytics YOLOv8 Documentation  
 
-Viola–Jones misses small, occluded, and rotated faces
-
-RetinaFace produces accurate boxes but low recall
-
-Faster R-CNN stable but slow and weak on tiny faces
-
-YOLOv8n-Face detects faces robustly even in dense crowds
-
-🧩 Discussion
-
-YOLOv8n-Face performs best because of:
-
-Anchor-free design
-
-Strong feature pyramids
-
-Good generalization
-
-Real-time inference capability
-
-Classical models lag in modern, unconstrained environments.
-
-⚠️ Limitations
-
-GPU memory restricted batch sizes
-
-Heavy models could not be fully trained
-
-Hard subset of WIDER FACE remains challenging
-
-No mAP scores due to compute constraints
-
-🚀 Future Work
-
-Train larger YOLO variants (m, l)
-
-Incorporate strong augmentation (mosaic, blur, jitter)
-
-Compute mAP@0.5 and mAP@0.5:0.95
 
 Build real-time pipeline for deployment
 
